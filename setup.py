@@ -1,7 +1,9 @@
 import numpy as np
 import cv2
 import Tkinter as Tk
+from ImageProcessor import ImageProcessor
 from tkFileDialog import askopenfilename
+
 MAZE_NAME = "Maze Display Window"
 
 def getUserSelectedFilePath():
@@ -19,6 +21,8 @@ def getUserSelectedImage():
 
 def setupWindow():
     image = getUserSelectedImage()
+    imageProcessor = ImageProcessor(image)
+    image = imageProcessor.getThresholdedImage(False)
     window = cv2.namedWindow(MAZE_NAME,0)
     cv2.imshow(MAZE_NAME,image)
     cv2.waitKey(0)
