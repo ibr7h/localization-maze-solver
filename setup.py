@@ -20,11 +20,15 @@ def getUserSelectedImage():
         filename = getUserSelectedFilePath()
     return cv2.imread(filename, 0)
 
+def testFuc(x):
+    pass
+
 def setupWindow():
     image = getUserSelectedImage()
     imageProcessor = ImageProcessor(image)
     image = imageProcessor.getThresholdedImage(True)
     window = cv2.namedWindow(MAZE_NAME,0)
+    cv2.createTrackbar("trackbar",MAZE_NAME,0,255,testFuc)
     cv2.imshow(MAZE_NAME,image)
     cv2.waitKey(0)
     cv2.destroyAllWindows
