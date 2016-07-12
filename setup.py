@@ -29,8 +29,7 @@ def setupWindow():
     image = imageProcessor.getThresholdedImage(False)
     window = cv2.namedWindow(MAZE_NAME,0)
     cv2.createTrackbar("trackbar",MAZE_NAME,0,255,testFuc)
-    top,left,bottom,right = imageProcessor.getBounds(image)
-    print(top,left,bottom,right)
+    image = imageProcessor.encloseMaze(image)
     cv2.imshow(MAZE_NAME,image)
     cv2.waitKey(0)
     cv2.destroyAllWindows
