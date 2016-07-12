@@ -28,3 +28,40 @@ class ImageProcessor:
 
     def blur(self):
         return cv2.blur(self.imageToProcess,9)
+
+    def getTopBound(self,image):
+        height, width = image.shape[:2]
+        for i in range(height):
+            for j in range(width):
+                if(image[j,i] == 255):
+                    return i
+
+    def getBottomBound(self,image):
+        height, width = image.shape[:2]
+        for i in reversed(range(height)):
+            for j in range(width):
+                if(image[j,i] == 255):
+                    return i
+
+    def getLeftBound(self,image):
+        height,width = image.shape[:2]
+        for i in range(width):
+            for j in range(height):
+                if(image[i,j] == 255):
+                    return i
+
+    def getRightBound(self,image):
+        height,width = image.shape[:2]
+        for i in reversed(range(width)):
+            for j in range(height):
+                if(image[i,j] == 255):
+                    return i
+
+
+    def getBounds(self,image):
+        height, width = image.shape[:2]
+        topBound = self.getTopBound(image)
+        bottomBound = self.getBottomBound(image)
+        leftBound = self.getLeftBound(image)
+        rightBound = self.getRightBound(image)
+        return topBound,leftBound,bottomBound,rightBound

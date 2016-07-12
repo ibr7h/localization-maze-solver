@@ -26,9 +26,11 @@ def testFuc(x):
 def setupWindow():
     image = getUserSelectedImage()
     imageProcessor = ImageProcessor(image)
-    image = imageProcessor.getThresholdedImage(True)
+    image = imageProcessor.getThresholdedImage(False)
     window = cv2.namedWindow(MAZE_NAME,0)
     cv2.createTrackbar("trackbar",MAZE_NAME,0,255,testFuc)
+    top,left,bottom,right = imageProcessor.getBounds(image)
+    print(top,left,bottom,right)
     cv2.imshow(MAZE_NAME,image)
     cv2.waitKey(0)
     cv2.destroyAllWindows
