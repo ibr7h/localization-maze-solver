@@ -66,6 +66,18 @@ class ImageProcessor:
         rightBound = self.getRightBound(image)
         return topBound,leftBound,bottomBound,rightBound
 
+    def getDefaultStart(self,image):
+        height,width =image.shape[:2]
+        for i in range(height):
+            if(image[width/2,i] != 0):
+                return i,width/2
+
+    def getDefaultEnd(self,image):
+        height,width = image.shape[:2]
+        for i in reversed range(height):
+            if(image[width/2,i] != 0):
+                return i,width/2
+
     def encloseMaze(self, image):
         top,left,bottom,right = self.getBounds(image)
         cv2.rectangle(image,(left,top),(right,bottom),0,1)
