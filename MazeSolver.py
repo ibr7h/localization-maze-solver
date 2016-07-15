@@ -7,18 +7,23 @@ class MazeSolver:
     def __init__(self,proccessedImage):
         self.image = proccessedImage
         self.height,width = image.shape[:2]
-        self.discovered_nodes = Q.PriorityQueue()
+        self.discovered_nodes = []
+        self.nodes_to_visit = Q.PriorityQueue()
         self.visited_nodes = []
 
     def solveMaze(self,start,end):
         curr_node = Node(start.x,start.y,None)
         end_node = Node(end.x,end.y,None)
-        
+        self.nodes_to_visit.put((curr_node.get_priority,curr_nodes))
         while curr_node.position!=end_node.position && not Queue.empty():
-            for nodes in self._get_new_nodes(curr_node):
-                #Get priority
-                #add to discovered_nodes
-                #dequeue next-best node
+            curr_node = nodes_to_visit.get()
+            for node in self._get_new_nodes(curr_node):
+                priority = node.get_priority(end_node)
+                discovered_nodes.append(node.position)
+                nodes_to_visit.put((priority,node))
+            
+
+
 
     def _get_new_nodes(self,parent):
         valid_new_nodes = []
@@ -44,7 +49,12 @@ class MazeSolver:
         return valid_new_nodes
 
 
-    def _is_valid_node(posiiton,parent):
+    def _is_valid_node(self,posiiton,parent):
+        return not(position in self.discovered_nodes or
+                   position in self.visited_nodes
+                   position == parent.position or
+
+                   self.image[position.x,position.y] = 0)
 
 class Node:
     HEURISTIC_DISTANCE_MULTIPLIER = 1;
@@ -57,8 +67,8 @@ class Node:
         self.previousNode = path
 
     def get_priority(self,end):
-        return TRAVELLED_DISTANCE_MULTIPLIER*self.length +
-               HEURISTIC_MULTIPLIER+self.getStraightLine(end)
+        return -1*( TRAVELLED_DISTANCE_MULTIPLIER*self.length +
+               HEURISTIC_MULTIPLIER+self.getStraightLine(end))
 
     def getStraightLine(self,end):
         return ((end.x-self.x)**2 + (end.y - self.y)**2)**0.5
