@@ -7,8 +7,8 @@ class MazeSolver:
     def __init__(self,proccessedImage):
         self.image = proccessedImage
         self.height,width = image.shape[:2]
-        self.discovered_nodes = []
         self.nodes_to_visit = Q.PriorityQueue()
+        self.discovered_nodes = []
         self.visited_nodes = []
 
     def solveMaze(self,start,end):
@@ -18,10 +18,13 @@ class MazeSolver:
         while curr_node.position!=end_node.position && not Queue.empty():
             curr_node = nodes_to_visit.get()
             for node in self._get_new_nodes(curr_node):
-                priority = node.get_priority(end_node)
                 discovered_nodes.append(node.position)
+                priority = node.get_priority(end_node)
                 nodes_to_visit.put((priority,node))
-            
+                visited_nodes.append(current_node.position)
+                curr_node = nodes_to_visit.get();
+
+
 
 
 
