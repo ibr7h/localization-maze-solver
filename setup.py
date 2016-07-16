@@ -3,6 +3,7 @@ import cv2
 import Tkinter as Tk
 import sys
 from ImageProcessor import ImageProcessor
+import MazeSolver
 from tkFileDialog import askopenfilename
 
 MAZE_NAME = "Maze Display Window"
@@ -31,6 +32,10 @@ def setupWindow():
     cv2.createTrackbar("trackbar",MAZE_NAME,0,255,testFuc)
     image = imageProcessor.encloseMaze(image)
     cv2.imshow(MAZE_NAME,image)
+    mazerunner = MazeSolver.MazeSolver(image);
+    start_x,start_y = imageProcessor.getDefaultStart(image)
+    end_x, end_y = imageProcessor.getDefaultEnd(image)
+    mazerunner.solveMaze(start_x,start_y,end_x,end_y)
     cv2.waitKey(0)
     cv2.destroyAllWindows
 

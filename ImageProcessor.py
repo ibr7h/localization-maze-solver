@@ -74,7 +74,7 @@ class ImageProcessor:
 
     def getDefaultEnd(self,image):
         height,width = image.shape[:2]
-        for i in reversed range(height):
+        for i in reversed(range(height)):
             if(image[width/2,i] != 0):
                 return i,width/2
 
