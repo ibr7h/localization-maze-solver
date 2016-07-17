@@ -22,18 +22,18 @@ class MazeSolver:
                 priority = node.get_priority(end_node)
                 self.nodes_to_visit.put((priority,node))
             self.visited_nodes.append(curr_node.position)
-            curr_node = self.nodes_to_visit.get()[1]
         if curr_node.position == end_node.position:
+            print self._get_solution_list(curr_node)
             return self._get_solution_list(curr_node)
         else:
             return False
 
-    def _get_solution_list(node):
+    def _get_solution_list(self, node):
         solution = []
         current = node
-        while current.parent != None:
+        while current.previousNode != None:
             solution.append(current.position)
-            current = current.parent
+            current = current.previousNode
         return solution
 
 

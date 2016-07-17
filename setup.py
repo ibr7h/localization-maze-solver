@@ -25,18 +25,24 @@ def testFuc(x):
     pass
 
 def setupWindow():
-    image = getUserSelectedImage()
-    imageProcessor = ImageProcessor(image)
+    original_image = getUserSelectedImage()
+    imageProcessor = ImageProcessor(original_image)
     image = imageProcessor.getThresholdedImage(False)
     window = cv2.namedWindow(MAZE_NAME,0)
     cv2.createTrackbar("trackbar",MAZE_NAME,0,255,testFuc)
     image = imageProcessor.encloseMaze(image)
-    cv2.imshow(MAZE_NAME,image)
     mazerunner = MazeSolver.MazeSolver(image);
     start_x,start_y = imageProcessor.getDefaultStart(image)
     end_x, end_y = imageProcessor.getDefaultEnd(image)
-    mazerunner.solveMaze(start_x,start_y,end_x,end_y)
+    solution = mazerunner.solveMaze(start_x,start_y,end_x,end_y)
+    solvedImage = draw_solution(solution,original_image)
+    cv2.imshow(MAZE_NAME,solvedImage)
     cv2.waitKey(0)
     cv2.destroyAllWindows
+
+def draw_solution(path,image):
+    for coordinate in path:
+        image[coordinate[0],coordinate[1]] = 120;
+    return image
 
 setupWindow()
