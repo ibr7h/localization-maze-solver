@@ -19,14 +19,14 @@ def getUserSelectedImage():
     while not ".png" in filename :
         print("Please Select a .png maze image")
         filename = getUserSelectedFilePath()
-    return cv2.imread(filename, 0)
+    return filename
 
 def testFuc(x):
     pass
 
 def setupWindow():
-    original_image = getUserSelectedImage()
-    imageProcessor = ImageProcessor(original_image)
+    filename = getUserSelectedImage()
+    imageProcessor = ImageProcessor(cv2.imread(filename,0))
     image = imageProcessor.getThresholdedImage(False)
     window = cv2.namedWindow(MAZE_NAME,0)
     cv2.createTrackbar("trackbar",MAZE_NAME,0,255,testFuc)
@@ -39,16 +39,16 @@ def setupWindow():
     if(not solution):
         cv2.imshow(MAZE_NAME,image)
     else:
-        solvedImage = draw_solution(solution,original_image)
-        solvedImage[start_y,start_x] = 30
-        solvedImage[start_y,start_x] = 30
+        solvedImage = draw_solution(solution,cv2.imread(filename,1))
+        solvedImage[start_y,start_x] = [1,0,0]
+        solvedImage[start_y,start_x] = [1,0,0]
         cv2.imshow(MAZE_NAME,solvedImage)
     cv2.waitKey(0)
     cv2.destroyAllWindows
 
 def draw_solution(path,image):
     for coordinate in path:
-        image[coordinate[1],coordinate[0]] = 120;
+        image[coordinate[1],coordinate[0]] = [0,255,0];
     return image
 
 setupWindow()

@@ -10,7 +10,7 @@ class MazeSolver:
         self.nodes_to_visit = q.PriorityQueue()
         self.node_distances = {}
         self.parent_nodes = {}
-        self.visited_nodes = []
+        self.visited_nodes = {}
 
     def solveMaze(self,start_x,start_y,end_x,end_y):
         i = 0
@@ -21,17 +21,23 @@ class MazeSolver:
         self.parent_nodes[curr_node.position] = None
         self.nodes_to_visit.put((curr_node.get_priority(end_node,0),curr_node))
         while curr_node.position!=end_node.position and not self.nodes_to_visit.empty():
+            if(i%10000 == 0):
+                print i
             curr_node = self.nodes_to_visit.get()[1]
             for node in self._get_new_nodes(curr_node):
                 distance = self.node_distances[curr_node.position] +self.GRANULARITY;
-                if( not node.position in self.node_distances or
-                    distance < self.node_distances[node.position]):
-
+                try:
+                    if distance < self.node_distances[node.position]:
+                        priority = node.get_priority(end_node,distance)
+                        self.node_distances[node.position] = distance
+                        self.nodes_to_visit.put((priority,node))
+                        self.parent_nodes[node.position] = curr_node
+                except KeyError:
                     priority = node.get_priority(end_node,distance)
                     self.node_distances[node.position] = distance
                     self.nodes_to_visit.put((priority,node))
                     self.parent_nodes[node.position] = curr_node
-            self.visited_nodes.append(curr_node.position)
+            self.visited_nodes[curr_node.position] = True
             i+=1
         if curr_node.position == end_node.position:
             print("Algorithm iterations:", i)
@@ -76,9 +82,11 @@ class MazeSolver:
 
 
     def _is_valid_node(self,position,parent):
-        return not(position[0] < 0 or position[0] >= self.width or
-                   position[1] < 0 or position [1] >= self.height or
-                   position in self.visited_nodes or
+        try:
+            return not self.visited_nodes[position] == True
+        except KeyError:
+            pass
+        return not(position in self.visited_nodes or
                    position == parent.position or
                    self.image[position[1], position[0]] == 0)
 
@@ -94,5 +102,5 @@ class Node:
                self.HEURISTIC_DISTANCE_MULTIPLIER+self.get_heuristic(end))
 
     def get_heuristic(self,end):
-        return 2*((end.position[0]-self.position[0])
+        return ((end.position[0]-self.position[0])
                 + (end.position[1] - self.position[1]))
