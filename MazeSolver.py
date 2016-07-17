@@ -3,27 +3,38 @@ import numpy as nps
 import Queue as q
 
 class MazeSolver:
-
+    GRANULARITY = 1
     def __init__(self,proccessedImage):
         self.image = proccessedImage
         self.height,self.width = proccessedImage.shape[:2]
         self.nodes_to_visit = q.PriorityQueue()
-        self.discovered_nodes = []
+        self.node_distances = {}
+        self.parent_nodes = {}
         self.visited_nodes = []
 
     def solveMaze(self,start_x,start_y,end_x,end_y):
+        i = 0
+        #setup
         curr_node = Node(start_x,start_y,None)
         end_node = Node(end_x,end_y,None)
-        self.nodes_to_visit.put((curr_node.get_priority,curr_node))
+        self.node_distances[curr_node.position] = 0
+        self.parent_nodes[curr_node.position] = None
+        self.nodes_to_visit.put((curr_node.get_priority(end_node,0),curr_node))
         while curr_node.position!=end_node.position and not self.nodes_to_visit.empty():
             curr_node = self.nodes_to_visit.get()[1]
             for node in self._get_new_nodes(curr_node):
-                self.discovered_nodes.append(node.position)
-                priority = node.get_priority(end_node)
-                self.nodes_to_visit.put((priority,node))
+                distance = self.node_distances[curr_node.position] +self.GRANULARITY;
+                if( not node.position in self.node_distances or
+                    distance < self.node_distances[node.position]):
+
+                    priority = node.get_priority(end_node,distance)
+                    self.node_distances[node.position] = distance
+                    self.nodes_to_visit.put((priority,node))
+                    self.parent_nodes[node.position] = curr_node
             self.visited_nodes.append(curr_node.position)
+            i+=1
         if curr_node.position == end_node.position:
-            print self._get_solution_list(curr_node)
+            print("Algorithm iterations:", i)
             return self._get_solution_list(curr_node)
         else:
             return False
@@ -31,42 +42,45 @@ class MazeSolver:
     def _get_solution_list(self, node):
         solution = []
         current = node
-        while current.previousNode != None:
+        while self.parent_nodes[current.position] != None:
             solution.append(current.position)
-            current = current.previousNode
+            current = self.parent_nodes[current.position]
         return solution
 
 
 
     def _get_new_nodes(self,parent):
         valid_new_nodes = []
-        if self._is_valid_node((parent.position[0]+1,parent.position[1]), parent):
-            valid_new_nodes.append(Node(parent.position[0]+1,
+        #Node Right
+        if self._is_valid_node((parent.position[0]+self.GRANULARITY,parent.position[1]), parent):
+            valid_new_nodes.append(Node(parent.position[0]+self.GRANULARITY,
                                         parent.position[1],
                                         parent))
-
+        #Node Left
         if self._is_valid_node((parent.position[0]-1,parent.position[1]), parent):
-            valid_new_nodes.append(Node(parent.position[0]-1,
+            valid_new_nodes.append(Node(parent.position[0]-self.GRANULARITY,
                                         parent.position[1],
                                         parent))
 
-        if self._is_valid_node((parent.position[0],parent.position[1]+1), parent):
+        #Node Above
+        if self._is_valid_node((parent.position[0],parent.position[1]+self.GRANULARITY), parent):
             valid_new_nodes.append(Node(parent.position[0],
-                                        parent.position[1]+1,
+                                        parent.position[1] +self.GRANULARITY,
                                         parent))
-
-        if self._is_valid_node((parent.position[0],parent.position[1]-1), parent):
+        #Node Below
+        if self._is_valid_node((parent.position[0],parent.position[1]-self.GRANULARITY), parent):
             valid_new_nodes.append(Node(parent.position[0],
-                                        parent.position[1]-1,
+                                        parent.position[1] -self.GRANULARITY,
                                         parent))
         return valid_new_nodes
 
 
     def _is_valid_node(self,position,parent):
-        return not(position in self.discovered_nodes or
+        return not(position[0] < 0 or position[0] >= self.width or
+                   position[1] < 0 or position [1] >= self.height or
                    position in self.visited_nodes or
                    position == parent.position or
-                   self.image[position[0],position[1]] == 0)
+                   self.image[position[1], position[0]] == 0)
 
 class Node:
     HEURISTIC_DISTANCE_MULTIPLIER = 1;
@@ -74,16 +88,11 @@ class Node:
 
     def __init__(self,x,y,prev):
         self.position = (x,y)
-        if(prev != None):
-            self.length = prev.length +1
-        else:
-            self.length = 0
-        self.previousNode = prev
 
-    def get_priority(self,end):
-        return -1*( self.TRAVELLED_DISTANCE_MULTIPLIER*self.length +
-               self.HEURISTIC_DISTANCE_MULTIPLIER+self.getStraightLine(end))
+    def get_priority(self,end,length):
+        return ( self.TRAVELLED_DISTANCE_MULTIPLIER*length +
+               self.HEURISTIC_DISTANCE_MULTIPLIER+self.get_heuristic(end))
 
-    def getStraightLine(self,end):
-        return ((end.position[0]-self.position[0])**2
-                + (end.position[1] - self.position[1])**2)**0.5
+    def get_heuristic(self,end):
+        return 2*((end.position[0]-self.position[0])
+                + (end.position[1] - self.position[1]))

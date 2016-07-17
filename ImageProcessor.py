@@ -69,14 +69,14 @@ class ImageProcessor:
     def getDefaultStart(self,image):
         height,width =image.shape[:2]
         for i in range(height):
-            if(image[width/2,i] != 0):
-                return i,width/2
+            if(image[i,width/2] != 0):
+                return width/2, i
 
     def getDefaultEnd(self,image):
         height,width = image.shape[:2]
         for i in reversed(range(height)):
-            if(image[width/2,i] != 0):
-                return i,width/2
+            if(image[i,width/2] != 0):
+                return width/2, i
 
     def encloseMaze(self, image):
         top,left,bottom,right = self.getBounds(image)

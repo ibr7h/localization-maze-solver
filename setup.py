@@ -34,15 +34,21 @@ def setupWindow():
     mazerunner = MazeSolver.MazeSolver(image);
     start_x,start_y = imageProcessor.getDefaultStart(image)
     end_x, end_y = imageProcessor.getDefaultEnd(image)
+
     solution = mazerunner.solveMaze(start_x,start_y,end_x,end_y)
-    solvedImage = draw_solution(solution,original_image)
-    cv2.imshow(MAZE_NAME,solvedImage)
+    if(not solution):
+        cv2.imshow(MAZE_NAME,image)
+    else:
+        solvedImage = draw_solution(solution,original_image)
+        solvedImage[start_y,start_x] = 30
+        solvedImage[start_y,start_x] = 30
+        cv2.imshow(MAZE_NAME,solvedImage)
     cv2.waitKey(0)
     cv2.destroyAllWindows
 
 def draw_solution(path,image):
     for coordinate in path:
-        image[coordinate[0],coordinate[1]] = 120;
+        image[coordinate[1],coordinate[0]] = 120;
     return image
 
 setupWindow()
