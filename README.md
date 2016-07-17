@@ -8,6 +8,6 @@ The goal of this project is simple. Taking a randomly generate image of a maze, 
 I'm going to be using mazegenerator.net to create the mazes. As a start, I'm going to use a simple square based orthoganal mazes, but I hope to refine my algorithm to handle more advanced algorithms
 
 Sample Maze:
-![Maze Sample Image](Sample Maze 2.png)
+![Maze Sample Image](test images/Sample Maze 2.png)
 
 
