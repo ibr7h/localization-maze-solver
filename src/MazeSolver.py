@@ -22,7 +22,7 @@ class MazeSolver:
         self.nodes_to_visit.put((curr_node.get_priority(end_node,0),curr_node))
         while curr_node.position!=end_node.position and not self.nodes_to_visit.empty():
             if(i%10000 == 0):
-                print i
+                print "Iteration {0} complete".format(i)
             curr_node = self.nodes_to_visit.get()[1]
             for node in self._get_new_nodes(curr_node):
                 distance = self.node_distances[curr_node.position] +self.GRANULARITY;
@@ -40,7 +40,7 @@ class MazeSolver:
             self.visited_nodes[curr_node.position] = True
             i+=1
         if curr_node.position == end_node.position:
-            print("Algorithm iterations:", i)
+            print("Algorithm completed. Total iterations: {0}".format(i))
             return self._get_solution_list(curr_node)
         else:
             return False

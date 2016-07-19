@@ -75,7 +75,7 @@ class ImageProcessor:
                 while(image[top,i]!= 0):
                     i+=1
                 right = i -1;
-                return (round((right+left)/2),top + 3)
+                return int(right+left)/2,top + 3
         return (width/2, top + 3)
 
 
@@ -88,8 +88,13 @@ class ImageProcessor:
                 while(image[bottom,i]!= 0):
                     i+=1
                 right = i -1;
-                return (round((right+left)/2), bottom - 3)
+                return int(right+left)/2, bottom - 3
         return (width/2, bottom - 3)
+
+    def markStartPoints(self, start, end, rad, colour, image):
+        cv2.circle(image,start,rad,colour,-1)
+        cv2.circle(image,end,rad,colour,-1)
+        return image
 
     def encloseMaze(self, image):
         top,left,bottom,right = self.getBounds(image)

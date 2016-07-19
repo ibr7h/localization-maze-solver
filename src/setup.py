@@ -32,6 +32,7 @@ def setupWindow():
     cv2.createTrackbar("trackbar",MAZE_NAME,0,255,testFuc)
     start_x,start_y = imageProcessor.getDefaultStart(image)
     end_x, end_y = imageProcessor.getDefaultEnd(image)
+
     image = imageProcessor.encloseMaze(image)
     mazerunner = MazeSolver.MazeSolver(image)
 
@@ -40,8 +41,7 @@ def setupWindow():
         cv2.imshow(MAZE_NAME,image)
     else:
         solvedImage = draw_solution(solution,cv2.imread(filename,1))
-        solvedImage[start_y,start_x] = [1,0,0]
-        solvedImage[start_y,start_x] = [1,0,0]
+        solvedImage = imageProcessor.markStartPoints((start_x,start_y),(end_x,end_y),3,(255,0,0),solvedImage)
         cv2.imshow(MAZE_NAME,solvedImage)
     cv2.waitKey(0)
     cv2.destroyAllWindows
