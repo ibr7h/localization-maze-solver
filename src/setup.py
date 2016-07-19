@@ -30,10 +30,10 @@ def setupWindow():
     image = imageProcessor.getThresholdedImage(False)
     window = cv2.namedWindow(MAZE_NAME,0)
     cv2.createTrackbar("trackbar",MAZE_NAME,0,255,testFuc)
-    image = imageProcessor.encloseMaze(image)
-    mazerunner = MazeSolver.MazeSolver(image);
     start_x,start_y = imageProcessor.getDefaultStart(image)
     end_x, end_y = imageProcessor.getDefaultEnd(image)
+    image = imageProcessor.encloseMaze(image)
+    mazerunner = MazeSolver.MazeSolver(image)
 
     solution = mazerunner.solveMaze(start_x,start_y,end_x,end_y)
     if(not solution):

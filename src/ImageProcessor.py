@@ -68,15 +68,28 @@ class ImageProcessor:
 
     def getDefaultStart(self,image):
         height,width =image.shape[:2]
-        for i in range(height):
-            if(image[i,width/2] != 0):
-                return width/2, i
+        top = self.getTopBound(image)
+        for i in range(width):
+            if image[top,i]!= 0:
+                left = i;
+                while(image[top,i]!= 0):
+                    i+=1
+                right = i -1;
+                return (round((right+left)/2),top + 3)
+        return (width/2, top + 3)
+
 
     def getDefaultEnd(self,image):
-        height,width = image.shape[:2]
-        for i in reversed(range(height)):
-            if(image[i,width/2] != 0):
-                return width/2, i
+        height,width =image.shape[:2]
+        bottom = self.getBottomBound(image)
+        for i in range(width):
+            if image[bottom,i]!= 0:
+                left = i;
+                while(image[bottom,i]!= 0):
+                    i+=1
+                right = i -1;
+                return (round((right+left)/2), bottom - 3)
+        return (width/2, bottom - 3)
 
     def encloseMaze(self, image):
         top,left,bottom,right = self.getBounds(image)
