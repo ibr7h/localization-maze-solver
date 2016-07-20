@@ -91,12 +91,13 @@ class ImageProcessor:
                 return int(right+left)/2, bottom - 3
         return (width/2, bottom - 3)
 
-    def markStartPoints(self, start, end, rad, colour, image):
-        cv2.circle(image,start,rad,colour,-1)
-        cv2.circle(image,end,rad,colour,-1)
+    def mark_point(self, point, rad, colour, image):
+        cv2.circle(image,point,rad,colour,-1)
         return image
 
     def encloseMaze(self, image):
         top,left,bottom,right = self.getBounds(image)
         cv2.rectangle(image,(left,top),(right,bottom),0,1)
         return image
+
+    def get_user_selectedPoint
