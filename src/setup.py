@@ -7,6 +7,7 @@ import MazeSolver
 from tkFileDialog import askopenfilename
 
 MAZE_NAME = "Maze Display Window"
+point = (-1,-1)
 
 def getUserSelectedFilePath():
     root = Tk.Tk()
@@ -62,7 +63,7 @@ def get_start_points(image):
             return start_x,start_y,end_x,end_y
         elif key == ord ('s'):
             print("Please select a start point")
-            start_x,end_x = get_user_selected_point(image):
+            start_x,end_x = get_user_selected_point(image)
             print ("Start Point: {0}, please select an end point".format((start_x,start_y)))
             end_x,end_y = get_user_selected_point(image)
             print("End Pont: {0}".format((end_x,end_y)))
@@ -72,10 +73,14 @@ def get_start_points(image):
             continues
 
 def get_user_selected_point(image):
-    x, y = cv2.setMouseCallBack(MAZE_NAME,get_mouse_point)
-    return x,y
+    global point
+    cv2.setMouseCallback(MAZE_NAME,get_mouse_point)
+    while point == (-1,-1):
+        cv2.waitKey(0);
+    return  point[0],point[1]
 
 def get_mouse_point(event,x,y,flags,param):
-    return x,y
+    global point
+    point = (x,y)
 
 setupWindow()

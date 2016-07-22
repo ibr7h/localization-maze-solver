@@ -99,5 +99,3 @@ class ImageProcessor:
         top,left,bottom,right = self.getBounds(image)
         cv2.rectangle(image,(left,top),(right,bottom),0,1)
         return image
-
-    def get_user_selectedPoint
