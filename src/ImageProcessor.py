@@ -99,3 +99,15 @@ class ImageProcessor:
         top,left,bottom,right = self.getBounds(image)
         cv2.rectangle(image,(left,top),(right,bottom),0,1)
         return image
+
+    def get_granularity(self,image, num_points):
+        total = 0
+        height,width = image.shape[:2]
+
+        for i in range(num_points):
+            point = (randint(0,height),randint(0,width))
+            while(image[point[0],point[1]] == 0):
+                point = (randint(0,height),randint(0,width))
+            total += self._find_closest_wall(point)
+
+    def _find_closest_wall(self, point)
