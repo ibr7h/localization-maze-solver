@@ -28,9 +28,10 @@ def testFuc(x):
 def setupWindow():
     filename = getUserSelectedImage()
     imageProcessor = ImageProcessor(cv2.imread(filename,0))
+    colourImage = cv2.imread(filename,1)
     image = imageProcessor.getThresholdedImage(False)
 
-    get_start_points(image)
+    start_x,start_y,end_x,end_y = get_start_points(image)
     image = imageProcessor.encloseMaze(image)
     mazerunner = MazeSolver.MazeSolver(image)
 
@@ -38,17 +39,18 @@ def setupWindow():
     if(not solution):
         cv2.imshow(MAZE_NAME,image)
     else:
-        solvedImage = draw_solution(solution,cv2.imread(filename,1))
+        solvedImage = draw_solution(solution, colourImage)
         solvedImage = imageProcessor.mark_point((end_x,end_y),3,(255,0,0),solvedImage)
-        solvedImage = imageProcessor.mart_point((start_x,start_y),3,(255,0,0),solvedImage)
-        cv2.imshow(MAZE_NAME,solvedImage)
+        solvedImage = imageProcessor.mark_point((start_x,start_y),3,(255,0,0),solvedImage)
+        cv2.imshow("Solved Image",solvedImage)
+    print "Press any key to exit"
     cv2.waitKey(0)
     cv2.destroyAllWindows
 
 def draw_solution(path,image):
     for coordinate in path:
         image[coordinate[1],coordinate[0]] = [0,255,0];
-    return
+    return image
 
 def get_start_points(image):
     window = cv2.imshow(MAZE_NAME,image)
@@ -63,24 +65,32 @@ def get_start_points(image):
             return start_x,start_y,end_x,end_y
         elif key == ord ('s'):
             print("Please select a start point")
-            start_x,end_x = get_user_selected_point(image)
+            start_x,start_y = get_user_selected_point(image)
             print ("Start Point: {0}, please select an end point".format((start_x,start_y)))
             end_x,end_y = get_user_selected_point(image)
             print("End Pont: {0}".format((end_x,end_y)))
             break
         else:
             print("Invalid")
-            continues
+            continue
+    cv2.destroyAllWindows()
+    return start_x,start_y,end_x,end_y
 
 def get_user_selected_point(image):
     global point
+    point = (-1,-1)
     cv2.setMouseCallback(MAZE_NAME,get_mouse_point)
+    print("Press any key once you have selected your point")
     while point == (-1,-1):
-        cv2.waitKey(0);
-    return  point[0],point[1]
+        cv2.waitKey(0)
+        if(point == (-1,-1)):
+            print("Invalid pont, please try again")
+    return point[0],point[1]
 
 def get_mouse_point(event,x,y,flags,param):
     global point
-    point = (x,y)
+    if event == cv2.EVENT_LBUTTONUP:
+        print("Point {0},{1} selected".format(x,y))
+        point = (x,y)
 
 setupWindow()
