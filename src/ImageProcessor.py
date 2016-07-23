@@ -108,6 +108,18 @@ class ImageProcessor:
             point = (randint(0,height),randint(0,width))
             while(image[point[0],point[1]] == 0):
                 point = (randint(0,height),randint(0,width))
-            total += self._find_closest_wall(point)
+            total += self._find_closest_wall(point,height,width)point = (randint(0,height),randint(0,width))
 
-    def _find_closest_wall(self, point)
+    def _find_closest_wall(self, point,height,width):
+        reachedWall = false
+        distance = 0:
+        while not reachedWall:
+            distance +=1
+            for i in range(distance):
+                if(image[point[0] + i,point[1] + distance - i] == 0
+                    or image[point[0] - i,point[1] + distance - i] == 0
+                    or image[point[0] + i,point[1] - distance - i] == 0
+                    or image[point[0] - i,point[1] - distance - i] == 0):
+                    reachedWall = true
+                    break;
+        reurn distance
