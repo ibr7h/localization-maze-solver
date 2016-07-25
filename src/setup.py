@@ -60,9 +60,9 @@ def get_start_points(image):
         key = cv2.waitKey(0)
         if key == ord('a'):
             print("Using Default Start and End Points")
+            imageProcessor = ImageProcessor(image)
             start_x,start_y = imageProcessor.getDefaultStart(image)
             end_x, end_y = imageProcessor.getDefaultEnd(image)
-            return start_x,start_y,end_x,end_y
         elif key == ord ('s'):
             print("Please select a start point")
             start_x,start_y = get_user_selected_point(image)

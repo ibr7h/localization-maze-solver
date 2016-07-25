@@ -3,7 +3,7 @@ import numpy as nps
 import Queue as q
 
 class MazeSolver:
-    GRANULARITY = 1
+
     def __init__(self,proccessedImage):
         self.image = proccessedImage
         self.height,self.width = proccessedImage.shape[:2]
@@ -11,6 +11,7 @@ class MazeSolver:
         self.node_distances = {}
         self.parent_nodes = {}
         self.visited_nodes = {}
+        self.GRANULARITY = 2
 
     def solveMaze(self,start_x,start_y,end_x,end_y):
         i = 0
@@ -58,24 +59,41 @@ class MazeSolver:
     def _get_new_nodes(self,parent):
         valid_new_nodes = []
         #Node Right
-        if self._is_valid_node((parent.position[0]+self.GRANULARITY,parent.position[1]), parent):
-            valid_new_nodes.append(Node(parent.position[0]+self.GRANULARITY,
+        for i in range(self.GRANULARITY):
+            if self.image[parent.position[1],parent.position[0]+i] == 0:
+                break
+
+        else:
+            if self._is_valid_node((parent.position[0]+self.GRANULARITY,parent.position[1]), parent):
+                valid_new_nodes.append(Node(parent.position[0]+self.GRANULARITY,
                                         parent.position[1],
                                         parent))
         #Node Left
-        if self._is_valid_node((parent.position[0]-1,parent.position[1]), parent):
-            valid_new_nodes.append(Node(parent.position[0]-self.GRANULARITY,
+        for i in range(self.GRANULARITY):
+            if self.image[parent.position[1],parent.position[0]-i] == 0:
+                break
+        else:
+            if self._is_valid_node((parent.position[0]-1,parent.position[1]), parent):
+                valid_new_nodes.append(Node(parent.position[0]-self.GRANULARITY,
                                         parent.position[1],
                                         parent))
 
         #Node Above
-        if self._is_valid_node((parent.position[0],parent.position[1]+self.GRANULARITY), parent):
-            valid_new_nodes.append(Node(parent.position[0],
+        for i in range(self.GRANULARITY):
+            if self.image[parent.position[1]+i,parent.position[0]] == 0:
+                break
+        else:
+            if self._is_valid_node((parent.position[0],parent.position[1]+self.GRANULARITY), parent):
+                valid_new_nodes.append(Node(parent.position[0],
                                         parent.position[1] +self.GRANULARITY,
                                         parent))
         #Node Below
-        if self._is_valid_node((parent.position[0],parent.position[1]-self.GRANULARITY), parent):
-            valid_new_nodes.append(Node(parent.position[0],
+        for i in range(self.GRANULARITY):
+            if self.image[parent.position[1]-i,parent.position[0]] == 0:
+                break
+        else:
+            if self._is_valid_node((parent.position[0],parent.position[1]-self.GRANULARITY), parent):
+                valid_new_nodes.append(Node(parent.position[0],
                                         parent.position[1] -self.GRANULARITY,
                                         parent))
         return valid_new_nodes
