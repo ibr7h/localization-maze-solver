@@ -11,11 +11,15 @@ class MazeSolver:
         self.node_distances = {}
         self.parent_nodes = {}
         self.visited_nodes = {}
-        self.GRANULARITY = 2
+        self.GRANULARITY = 8
 
     def solveMaze(self,start_x,start_y,end_x,end_y):
         i = 0
         #setup
+        self.start_x = start_x
+        self.start_y = start_y
+        self.end_x = end_x
+        self.end_y = end_y
         curr_node = Node(start_x,start_y,None)
         end_node = Node(end_x,end_y,None)
         self.node_distances[curr_node.position] = 0
@@ -44,6 +48,7 @@ class MazeSolver:
             print("Algorithm completed. Total iterations: {0}".format(i))
             return self._get_solution_list(curr_node)
         else:
+            print("No solution found")
             return False
 
     def _get_solution_list(self, node):
@@ -58,43 +63,52 @@ class MazeSolver:
 
     def _get_new_nodes(self,parent):
         valid_new_nodes = []
+        granularity = self.GRANULARITY
+        if( self.end_x < parent.position[0] + granularity and
+            self.end_x > parent.position[0] - granularity and
+            self.end_y < parent.position[1] + granularity and
+            self.end_y > parent.position[1] - granularity):
+            print "Getting Close! Position is:{0}".format(parent.position)
+
+            granularity = 1
+
         #Node Right
-        for i in range(self.GRANULARITY):
+        for i in range(granularity):
             if self.image[parent.position[1],parent.position[0]+i] == 0:
                 break
 
         else:
-            if self._is_valid_node((parent.position[0]+self.GRANULARITY,parent.position[1]), parent):
-                valid_new_nodes.append(Node(parent.position[0]+self.GRANULARITY,
+            if self._is_valid_node((parent.position[0]+granularity,parent.position[1]), parent):
+                valid_new_nodes.append(Node(parent.position[0]+granularity,
                                         parent.position[1],
                                         parent))
         #Node Left
-        for i in range(self.GRANULARITY):
+        for i in range(granularity):
             if self.image[parent.position[1],parent.position[0]-i] == 0:
                 break
         else:
             if self._is_valid_node((parent.position[0]-1,parent.position[1]), parent):
-                valid_new_nodes.append(Node(parent.position[0]-self.GRANULARITY,
+                valid_new_nodes.append(Node(parent.position[0]-granularity,
                                         parent.position[1],
                                         parent))
 
         #Node Above
-        for i in range(self.GRANULARITY):
+        for i in range(granularity):
             if self.image[parent.position[1]+i,parent.position[0]] == 0:
                 break
         else:
-            if self._is_valid_node((parent.position[0],parent.position[1]+self.GRANULARITY), parent):
+            if self._is_valid_node((parent.position[0],parent.position[1]+granularity), parent):
                 valid_new_nodes.append(Node(parent.position[0],
-                                        parent.position[1] +self.GRANULARITY,
+                                        parent.position[1] +granularity,
                                         parent))
         #Node Below
-        for i in range(self.GRANULARITY):
+        for i in range(granularity):
             if self.image[parent.position[1]-i,parent.position[0]] == 0:
                 break
         else:
-            if self._is_valid_node((parent.position[0],parent.position[1]-self.GRANULARITY), parent):
+            if self._is_valid_node((parent.position[0],parent.position[1]-granularity), parent):
                 valid_new_nodes.append(Node(parent.position[0],
-                                        parent.position[1] -self.GRANULARITY,
+                                        parent.position[1] -granularity,
                                         parent))
         return valid_new_nodes
 
