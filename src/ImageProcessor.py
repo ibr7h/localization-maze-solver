@@ -76,7 +76,7 @@ class ImageProcessor:
                     i+=1
                 right = i -1;
                 return int(right+left)/2,top + 3
-        return (width/2, top + 3)
+        return width/2, top + 3
 
 
     def getDefaultEnd(self,image):
@@ -89,7 +89,7 @@ class ImageProcessor:
                     i+=1
                 right = i -1;
                 return int(right+left)/2, bottom - 3
-        return (width/2, bottom - 3)
+        return width/2, bottom - 3
 
     def mark_point(self, point, rad, colour, image):
         cv2.circle(image,point,rad,colour,-1)

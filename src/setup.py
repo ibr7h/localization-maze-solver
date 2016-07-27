@@ -63,6 +63,8 @@ def get_start_points(image):
             imageProcessor = ImageProcessor(image)
             start_x,start_y = imageProcessor.getDefaultStart(image)
             end_x, end_y = imageProcessor.getDefaultEnd(image)
+            print("Start Point: {0}, End Point: {1}".format((start_x,start_y),(end_x,end_y)))
+            break
         elif key == ord ('s'):
             print("Please select a start point")
             start_x,start_y = get_user_selected_point(image)
