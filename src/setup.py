@@ -42,6 +42,9 @@ def setupWindow():
         solvedImage = draw_solution(solution, colourImage)
         solvedImage = imageProcessor.mark_point((end_x,end_y),3,(255,0,0),solvedImage)
         solvedImage = imageProcessor.mark_point((start_x,start_y),3,(255,0,0),solvedImage)
+        window = cv2.namedWindow("Solved Image", cv2.WINDOW_NORMAL)
+        cv2.resizeWindow("Solved Image", 900,900)
+        cv2.moveWindow("Solved Image",100,100)
         cv2.imshow("Solved Image",solvedImage)
     print "Press any key to exit"
     cv2.waitKey(0)
@@ -53,7 +56,10 @@ def draw_solution(path,image):
     return image
 
 def get_start_points(image):
-    window = cv2.imshow(MAZE_NAME,image)
+    window = cv2.namedWindow(MAZE_NAME, cv2.WINDOW_NORMAL)
+    cv2.resizeWindow(MAZE_NAME, 900,900)
+    cv2.imshow(MAZE_NAME,image)
+    cv2.moveWindow(MAZE_NAME,100,100)
     print("Please \'A\' to use default start and end points, or press \'S\' to choose your own)")
 
     while(True):
