@@ -57,6 +57,7 @@ class MazeSolver:
         while self.parent_nodes[current.position] != None:
             solution.append(current.position)
             current = self.parent_nodes[current.position]
+        solution.append((self.start_x,self.start_y))
         return solution
 
 

@@ -51,8 +51,10 @@ def setupWindow():
     cv2.destroyAllWindows
 
 def draw_solution(path,image):
-    for coordinate in path:
-        image[coordinate[1],coordinate[0]] = [0,255,0];
+    for i in range(len(path) -1):
+        current_point = path[i]
+        next_point = path[i+1]
+        cv2.line(image,current_point,next_point,(0,0,200),2)
     return image
 
 def get_start_points(image):
