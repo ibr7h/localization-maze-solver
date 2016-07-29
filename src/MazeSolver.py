@@ -4,14 +4,14 @@ import Queue as q
 
 class MazeSolver:
 
-    def __init__(self,proccessedImage):
+    def __init__(self,proccessedImage,granularity):
         self.image = proccessedImage
         self.height,self.width = proccessedImage.shape[:2]
         self.nodes_to_visit = q.PriorityQueue()
         self.node_distances = {}
         self.parent_nodes = {}
         self.visited_nodes = {}
-        self.GRANULARITY = 8
+        self.GRANULARITY = granularity
 
     def solveMaze(self,start_x,start_y,end_x,end_y):
         i = 0

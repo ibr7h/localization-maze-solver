@@ -1,4 +1,5 @@
 import cv2
+import random as r
 import numpy as np
 
 class ImageProcessor:
@@ -105,14 +106,14 @@ class ImageProcessor:
         height,width = image.shape[:2]
 
         for i in range(num_points):
-            point = (randint(0,height),randint(0,width))
+            point = (r.randint(0,height-1),r.randint(0,width-1))
             while(image[point[0],point[1]] == 0):
-                point = (randint(0,height),randint(0,width))
-            total += self._find_closest_wall(point,height,width)
-        return total/num_points
+                point = (r.randint(0,height),r.randint(0,width))
+            total += self._find_closest_wall(image,point,height,width)
+        return int(2*total/num_points)
 
-    def _find_closest_wall(self, point,height,width):
-        reachedWall = false
+    def _find_closest_wall(self,image, point,height,width):
+        reachedWall = False
         distance = 0
         while not reachedWall:
             distance +=1
@@ -121,6 +122,6 @@ class ImageProcessor:
                     or image[point[0] - i,point[1] + distance - i] == 0
                     or image[point[0] + i,point[1] - distance - i] == 0
                     or image[point[0] - i,point[1] - distance - i] == 0):
-                    reachedWall = true
+                    reachedWall = True
                     break;
         return distance

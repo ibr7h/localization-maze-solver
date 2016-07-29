@@ -30,11 +30,11 @@ def setupWindow():
     imageProcessor = ImageProcessor(cv2.imread(filename,0))
     colourImage = cv2.imread(filename,1)
     image = imageProcessor.getThresholdedImage(False)
-
+    granularity = imageProcessor.get_granularity(image, 100)
+    print("Granularity: {0}".format(granularity))
     start_x,start_y,end_x,end_y = get_start_points(image)
     image = imageProcessor.encloseMaze(image)
-    mazerunner = MazeSolver.MazeSolver(image)
-
+    mazerunner = MazeSolver.MazeSolver(image,granularity)
     solution = mazerunner.solveMaze(start_x,start_y,end_x,end_y)
     if(not solution):
         cv2.imshow(MAZE_NAME,image)
