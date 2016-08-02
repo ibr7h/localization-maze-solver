@@ -34,28 +34,28 @@ class ImageProcessor:
         height, width = image.shape[:2]
         for i in range(height):
             for j in range(width):
-                if(image[j,i] == 0):
+                if(image[i,j] == 0):
                     return i
 
     def getBottomBound(self,image):
         height, width = image.shape[:2]
         for i in reversed(range(height)):
             for j in range(width):
-                if(image[j,i] == 0):
+                if(image[i,j] == 0):
                     return i
 
     def getLeftBound(self,image):
         height,width = image.shape[:2]
         for i in range(width):
             for j in range(height):
-                if(image[i,j] == 0):
+                if(image[j,i] == 0):
                     return i
 
     def getRightBound(self,image):
         height,width = image.shape[:2]
         for i in reversed(range(width)):
             for j in range(height):
-                if(image[i,j] == 0):
+                if(image[j,i] == 0):
                     return i
 
 
@@ -110,13 +110,15 @@ class ImageProcessor:
             while(image[point[0],point[1]] == 0):
                 point = (r.randint(0,height),r.randint(0,width))
             total += self._find_closest_wall(image,point,height,width)
-        return int(2*total/num_points)
+        return int(1.2*total/num_points)
 
     def _find_closest_wall(self,image, point,height,width):
         reachedWall = False
         distance = 0
         while not reachedWall:
             distance +=1
+            if (point[0]+distance == height or point[0]-distance == -1 or point[1]+distance == width or point[1] - distance == -1):
+                break;
             for i in range(distance):
                 if(image[point[0] + i,point[1] + distance - i] == 0
                     or image[point[0] - i,point[1] + distance - i] == 0
