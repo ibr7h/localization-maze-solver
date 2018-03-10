@@ -22,9 +22,6 @@ def getUserSelectedImage():
         filename = getUserSelectedFilePath()
     return filename
 
-def testFuc(x):
-    pass
-
 def setupWindow():
     filename = getUserSelectedImage()
     imageProcessor = ImageProcessor(cv2.imread(filename,0))

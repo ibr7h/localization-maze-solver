@@ -63,40 +63,15 @@ class MazeSolver:
             abs(self.end_y - parent.position[1]) < granularity):
             granularity = 1
 
-        #Node Right
-        for i in range(granularity):
-            if self.image[parent.position[1],parent.position[0]+i] == 0:
-                break
+        moves = [[0,granularity],[0,-granularity],[granularity,0],[-granularity,0]]
 
-        else:
-            if self._is_valid_node((parent.position[0]+granularity,parent.position[1]), parent):
-                valid_new_nodes.append(Node(parent.position[0]+granularity,
-                                        parent.position[1]))
-        #Node Left
-        for i in range(granularity):
-            if self.image[parent.position[1],parent.position[0]-i] == 0:
-                break
-        else:
-            if self._is_valid_node((parent.position[0]-1,parent.position[1]), parent):
-                valid_new_nodes.append(Node(parent.position[0]-granularity,
-                                        parent.position[1]))
-
-        #Node Above
-        for i in range(granularity):
-            if self.image[parent.position[1]+i,parent.position[0]] == 0:
-                break
-        else:
-            if self._is_valid_node((parent.position[0],parent.position[1]+granularity), parent):
-                valid_new_nodes.append(Node(parent.position[0],
-                                        parent.position[1] +granularity))
-        #Node Below
-        for i in range(granularity):
-            if self.image[parent.position[1]-i,parent.position[0]] == 0:
-                break
-        else:
-            if self._is_valid_node((parent.position[0],parent.position[1]-granularity), parent):
-                valid_new_nodes.append(Node(parent.position[0],
-                                        parent.position[1] -granularity))
+        for move in moves:
+            for i in range(granularity):
+                if not self.image[parent.position[1] + (move[1]//granularity)*i,parent.position[0] + (move[0]//granularity)*i]:
+                    break
+            else:
+                new_node = Node(*[pos+move for pos,move in zip(parent.position,move)])
+                valid_new_nodes.append(new_node)
         return valid_new_nodes
 
 
