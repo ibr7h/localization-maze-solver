@@ -20,28 +20,22 @@ class MazeSolver:
         self.start_y = start_y
         self.end_x = end_x
         self.end_y = end_y
-        curr_node = Node(start_x,start_y,None)
-        end_node = Node(end_x,end_y,None)
+        curr_node = Node(start_x,start_y)
+        end_node = Node(end_x,end_y)
         self.node_distances[curr_node.position] = 0
         self.parent_nodes[curr_node.position] = None
         self.nodes_to_visit.put((curr_node.get_priority(end_node,0),curr_node))
         while curr_node.position!=end_node.position and not self.nodes_to_visit.empty():
             if(i%10000 == 0):
                 print "Iteration {0} complete".format(i)
-            curr_node = self.nodes_to_visit.get()[1]
+            _, curr_node = self.nodes_to_visit.get()
             for node in self._get_new_nodes(curr_node):
                 distance = self.node_distances[curr_node.position] +self.GRANULARITY;
-                try:
-                    if distance < self.node_distances[node.position]:
+                if not node.position in self.node_distances or distance < self.node_distances[node.position]:
                         priority = node.get_priority(end_node,distance)
                         self.node_distances[node.position] = distance
                         self.nodes_to_visit.put((priority,node))
                         self.parent_nodes[node.position] = curr_node
-                except KeyError:
-                    priority = node.get_priority(end_node,distance)
-                    self.node_distances[node.position] = distance
-                    self.nodes_to_visit.put((priority,node))
-                    self.parent_nodes[node.position] = curr_node
             self.visited_nodes[curr_node.position] = True
             i+=1
         if curr_node.position == end_node.position:
@@ -65,12 +59,8 @@ class MazeSolver:
     def _get_new_nodes(self,parent):
         valid_new_nodes = []
         granularity = self.GRANULARITY
-        if( self.end_x < parent.position[0] + granularity and
-            self.end_x > parent.position[0] - granularity and
-            self.end_y < parent.position[1] + granularity and
-            self.end_y > parent.position[1] - granularity):
-            print "Getting Close! Position is:{0}".format(parent.position)
-
+        if( abs(self.end_x - parent.position[0]) < granularity and
+            abs(self.end_y - parent.position[1]) < granularity):
             granularity = 1
 
         #Node Right
@@ -81,8 +71,7 @@ class MazeSolver:
         else:
             if self._is_valid_node((parent.position[0]+granularity,parent.position[1]), parent):
                 valid_new_nodes.append(Node(parent.position[0]+granularity,
-                                        parent.position[1],
-                                        parent))
+                                        parent.position[1]))
         #Node Left
         for i in range(granularity):
             if self.image[parent.position[1],parent.position[0]-i] == 0:
@@ -90,8 +79,7 @@ class MazeSolver:
         else:
             if self._is_valid_node((parent.position[0]-1,parent.position[1]), parent):
                 valid_new_nodes.append(Node(parent.position[0]-granularity,
-                                        parent.position[1],
-                                        parent))
+                                        parent.position[1]))
 
         #Node Above
         for i in range(granularity):
@@ -100,8 +88,7 @@ class MazeSolver:
         else:
             if self._is_valid_node((parent.position[0],parent.position[1]+granularity), parent):
                 valid_new_nodes.append(Node(parent.position[0],
-                                        parent.position[1] +granularity,
-                                        parent))
+                                        parent.position[1] +granularity))
         #Node Below
         for i in range(granularity):
             if self.image[parent.position[1]-i,parent.position[0]] == 0:
@@ -109,8 +96,7 @@ class MazeSolver:
         else:
             if self._is_valid_node((parent.position[0],parent.position[1]-granularity), parent):
                 valid_new_nodes.append(Node(parent.position[0],
-                                        parent.position[1] -granularity,
-                                        parent))
+                                        parent.position[1] -granularity))
         return valid_new_nodes
 
 
@@ -127,7 +113,7 @@ class Node:
     HEURISTIC_DISTANCE_MULTIPLIER = 1;
     TRAVELLED_DISTANCE_MULTIPLIER = 1;
 
-    def __init__(self,x,y,prev):
+    def __init__(self,x,y):
         self.position = (x,y)
 
     def get_priority(self,end,length):
