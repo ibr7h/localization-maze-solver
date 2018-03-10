@@ -46,7 +46,7 @@ def setupWindow():
         cv2.resizeWindow("Solved Image", 900,900)
         cv2.moveWindow("Solved Image",100,100)
         cv2.imshow("Solved Image",solvedImage)
-    print "Press any key to exit"
+    print("Press any key to exit")
     cv2.waitKey(0)
     cv2.destroyAllWindows
 
@@ -62,10 +62,12 @@ def get_start_points(image):
     cv2.resizeWindow(MAZE_NAME, 900,900)
     cv2.imshow(MAZE_NAME,image)
     cv2.moveWindow(MAZE_NAME,100,100)
+    imageProcessor = ImageProcessor(image)
+    start_x,start_y = imageProcessor.getDefaultStart(image)
+    end_x, end_y = imageProcessor.getDefaultEnd(image)
     print("Please \'A\' to use default start and end points, or press \'S\' to choose your own)")
-
-    while(True):
-        key = cv2.waitKey(0)
+    for _ in range(5):
+        key = cv2.waitKey(2000)
         if key == ord('a'):
             print("Using Default Start and End Points")
             imageProcessor = ImageProcessor(image)
