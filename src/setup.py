@@ -2,8 +2,9 @@ import numpy as np
 import cv2
 import Tkinter as Tk
 import sys
-from ImageProcessor import ImageProcessor
-import MazeSolver
+from image_processor import ImageProcessor
+from policy_generator import PolicyGenerator
+from maze_solver import MazeSolver
 from tkFileDialog import askopenfilename
 
 MAZE_NAME = "Maze Display Window"
@@ -27,22 +28,25 @@ def setupWindow():
     imageProcessor = ImageProcessor(cv2.imread(filename,0))
     colourImage = cv2.imread(filename,1)
     image = imageProcessor.getThresholdedImage(False)
-    granularity = imageProcessor.get_granularity(image, 100)
-    print("Granularity: {0}".format(granularity))
-    start_x,start_y,end_x,end_y = get_start_points(image)
+    #granularity = imageProcessor.get_granularity(image, 100)
+    #print("Granularity: {0}".format(granularity))
+    #start_x,start_y,end_x,end_y = get_start_points(image)
     image = imageProcessor.encloseMaze(image)
-    mazerunner = MazeSolver.MazeSolver(image,granularity)
-    solution = mazerunner.solveMaze(start_x,start_y,end_x,end_y)
-    if(not solution):
-        cv2.imshow(MAZE_NAME,image)
-    else:
-        solvedImage = draw_solution(solution, colourImage)
-        solvedImage = imageProcessor.mark_point((end_x,end_y),3,(255,0,0),solvedImage)
-        solvedImage = imageProcessor.mark_point((start_x,start_y),3,(255,0,0),solvedImage)
-        window = cv2.namedWindow("Solved Image", cv2.WINDOW_NORMAL)
-        cv2.resizeWindow("Solved Image", 900,900)
-        cv2.moveWindow("Solved Image",100,100)
-        cv2.imshow("Solved Image",solvedImage)
+    rows,cols = PolicyGenerator(image).get_critical_grid()
+    grid_img = imageProcessor.draw_grid(image,rows,cols)
+    cv2.imshow(MAZE_NAME,grid_img)
+    # mazerunner = MazeSolver(image,granularity)
+    # solution = mazerunner.solveMaze(start_x,start_y,end_x,end_y)
+    # if(not solution):
+    #     cv2.imshow(MAZE_NAME,image)
+    # else:
+    #     solvedImage = draw_solution(solution, colourImage)
+    #     solvedImage = imageProcessor.mark_point((end_x,end_y),3,(255,0,0),solvedImage)
+    #     solvedImage = imageProcessor.mark_point((start_x,start_y),3,(255,0,0),solvedImage)
+    #     window = cv2.namedWindow("Solved Image", cv2.WINDOW_NORMAL)
+    #     cv2.resizeWindow("Solved Image", 900,900)
+    #     cv2.moveWindow("Solved Image",100,100)
+    #     cv2.imshow("Solved Image",solvedImage)
     print("Press any key to exit")
     cv2.waitKey(0)
     cv2.destroyAllWindows

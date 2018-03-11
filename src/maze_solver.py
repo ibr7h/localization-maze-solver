@@ -1,7 +1,7 @@
 import cv2
 import numpy as nps
 import Queue as q
-from Node import Node
+from node import Node
 
 class MazeSolver:
 

@@ -127,3 +127,14 @@ class ImageProcessor:
                     reachedWall = True
                     break;
         return distance
+
+    def draw_grid(self,image,rows,columns):
+        h,w = image.shape
+        for row in rows:
+            cv2.line(image,(row,0),(row,w),(0,0,200),1)
+        for col in columns:
+            cv2.line(image,(0,col),(h,col),(0,0,200),1)
+        return image
+
+
+
