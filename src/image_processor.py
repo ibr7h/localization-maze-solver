@@ -136,5 +136,13 @@ class ImageProcessor:
             cv2.line(image,(0,col),(h,col),(0,0,200),1)
         return image
 
+    def draw_nodes(self,image,grid):
+        for row in grid:
+            for i,j,is_wall in row:
+                color = (255,0,0) if is_wall else (0,0,255)
+                image = self.mark_point((i,j),1,color,image)
+        return image
+
+
 
 
