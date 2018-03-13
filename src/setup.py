@@ -34,8 +34,11 @@ def setupWindow():
     image = imageProcessor.encloseMaze(image)
     pg = PolicyGenerator(image)
     rows,cols = pg.get_critical_grid()
-    graph = pg.get_reduced_graph([rows,cols])
-    grid_img = imageProcessor.draw_nodes(colourImage,graph)
+    graph,mapping = pg.get_reduced_graph([rows,cols])
+    row = len(graph)  -1
+    col = graph[-1].index(0)
+    pg.generate_policy(graph,(row,col))
+    #grid_img = imageProcessor.draw_nodes(colourImage,graph)
     cv2.imshow(MAZE_NAME,grid_img)
     # mazerunner = MazeSolver(image,granularity)
     # solution = mazerunner.solveMaze(start_x,start_y,end_x,end_y)
