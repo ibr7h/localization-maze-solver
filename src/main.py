@@ -28,32 +28,42 @@ def setupWindow():
     imageProcessor = ImageProcessor(cv2.imread(filename,0))
     colourImage = cv2.imread(filename,1)
     image = imageProcessor.getThresholdedImage(False)
-    #granularity = imageProcessor.get_granularity(image, 100)
-    #print("Granularity: {0}".format(granularity))
+    granularity = imageProcessor.get_granularity(image, 100)
+    print("Granularity: {0}".format(granularity))
     start_x,start_y,end_x,end_y = get_start_points(image)
     image = imageProcessor.encloseMaze(image)
     pg = PolicyGenerator(image)
     rows,cols = pg.get_critical_grid()
     graph,mapping = pg.get_reduced_graph([rows,cols])
     policy = pg.generate_policy((end_x,end_y))
-    policy_image = imageProcessor.draw_policy(colourImage,policy)
-    policy_image = imageProcessor.mark_point((end_x,end_y),3,(255,0,0),policy_image)
-
-    cv2.imshow(MAZE_NAME,policy_image)
-    # mazerunner = MazeSolver(image,granularity)
-    # solution = mazerunner.solveMaze(start_x,start_y,end_x,end_y)
-    # if(not solution):
-    #     cv2.imshow(MAZE_NAME,image)
-    # else:
-    #     solvedImage = draw_solution(solution, colourImage)
-    #     solvedImage = imageProcessor.mark_point((start_x,start_y),3,(255,0,0),solvedImage)
-    #     window = cv2.namedWindow("Solved Image", cv2.WINDOW_NORMAL)
-    #     cv2.resizeWindow("Solved Image", 900,900)
-    #     cv2.moveWindow("Solved Image",100,100)
-    #     cv2.imshow("Solved Image",solvedImage)
+    solution = solve_using_policy(policy,(start_x,start_y),(end_x,end_y))
+    imageProcessor.draw_policy(colourImage,policy)
+    imageProcessor.mark_point((end_x,end_y),3,(255,0,0),colourImage)
+    #cv2.imshow(MAZE_NAME,policy_image)
+    mazerunner = MazeSolver(image,granularity)
+    #solution = mazerunner.solveMaze(start_x,start_y,end_x,end_y)
+    if(not solution):
+        cv2.imshow(MAZE_NAME,image)
+    else:
+        solvedImage = draw_solution(solution, colourImage)
+        solvedImage = imageProcessor.mark_point((start_x,start_y),3,(255,0,0),solvedImage)
+        window = cv2.namedWindow("Solved Image", cv2.WINDOW_NORMAL)
+        cv2.resizeWindow("Solved Image", 900,900)
+        cv2.moveWindow("Solved Image",100,100)
+        cv2.imshow("Solved Image",solvedImage)
     print("Press any key to exit")
     cv2.waitKey(0)
     cv2.destroyAllWindows
+
+def solve_using_policy(policy,start,end):
+    path = []
+    curr = start
+    while curr != end:
+        path.append(curr)
+        move = policy[curr[0]][curr[1]]
+        curr = (curr[0] + move[0], curr[1]+move[1])
+    path.append(curr)
+    return path
 
 def draw_solution(path,image):
     for i in range(len(path) -1):

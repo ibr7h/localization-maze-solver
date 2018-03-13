@@ -147,7 +147,6 @@ class ImageProcessor:
     def draw_policy(self,image,policy):
         for j,row in enumerate(policy):
             for i,direction in enumerate(row):
-                print i,j,direction,image[i,j]
                 if direction == -1:
                     image[i,j] = (0,0,0)
                 elif direction == [0,1]:

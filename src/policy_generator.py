@@ -45,8 +45,6 @@ class PolicyGenerator(object):
 				last = False
 
 
-		print ("CRIT ROWS: " + str(rows))
-		print ("CRIT COLS: " + str(columns))
 		self.get_reduced_graph([rows,columns])
 		return [rows,columns]
 
@@ -54,7 +52,6 @@ class PolicyGenerator(object):
 		h,w = len(critical_grid),len(critical_grid[0])
 		expanded = []
 		for i in range(2):
-			print critical_grid[i][-1]
 			middle_rows = [(x+y)/2 for x,y in zip(critical_grid[i][:-1],critical_grid[0][1:])]
 			expanded.append([num for pair in zip(critical_grid[i],middle_rows) for num in pair] + [critical_grid[i][-1]])
 		expanded_grid = [[int(not self.image[k,j]) for j in expanded[0]] for k in expanded[1]]
