@@ -143,3 +143,19 @@ class ImageProcessor:
                 color = (255,0,0) if is_wall else (0,0,255)
                 image = self.mark_point((x,y),1,color,image)
         return image
+
+    def draw_policy(self,image,policy):
+        for j,row in enumerate(policy):
+            for i,direction in enumerate(row):
+                print i,j,direction,image[i,j]
+                if direction == -1:
+                    image[i,j] = (0,0,0)
+                elif direction == [0,1]:
+                    image[i,j] = (255,255,255)
+                elif direction == [1,0]:
+                    image[i,j] = (180,180,180)
+                elif direction == [0,-1]:
+                    image[i,j] = (120,120,120)
+                else:
+                    image[i,j] = (60,60,60)
+        return image 

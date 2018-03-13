@@ -6,6 +6,7 @@ class PolicyGenerator(object):
 	def __init__(self,image):
 		self.image = image
 		self.h,self.w = image.shape[:2]
+		self.default_graph = [[image[i,j] == 0 for i in range(self.h)] for j in range(self.w)]
 
 	def get_critical_grid(self,border=0):
 		"""Assuming a square grid, this function returns the critical columns and rows of the maze"""
@@ -60,7 +61,9 @@ class PolicyGenerator(object):
 		mapping_grid = [[(j,k) for j in expanded[0]] for k in expanded[1]]
 		return expanded_grid,mapping_grid			
 
-	def generate_policy(self,reduced_map,end):
+	def generate_policy(self,end,reduced_map=None):
+		if not reduced_map:
+			reduced_map = self.default_graph
 		h,w = len(reduced_map),len(reduced_map[0])
 		DIRS = [-1,0],[0,1],[1,0],[0,-1]
 		distances = [[sys.maxint] * w for _ in range(h)]
