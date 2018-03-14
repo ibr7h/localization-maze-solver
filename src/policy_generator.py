@@ -65,26 +65,23 @@ class PolicyGenerator(object):
 		DIRS = [-1,0],[0,1],[1,0],[0,-1]
 		distances = [[sys.maxint] * w for _ in range(h)]
 		directions = [[-1] * w for _ in range(h)]
-		distances[end[0]][end[1]] = 0
-		todo = set()
-		todo.add(end)
+		distances = PriorityQueue()
+		distances.put((0,end))
 		visited = set()
-		while(todo):
-			min_dist = sys.maxint
-			min_node = None
-			for i,j in todo:
-				if (i,j) not in visited and distances[i][j] < min_dist:
-					min_node = (i,j)
-					min_dist = distances[i][j]
-			todo.remove(min_node)
-			for i,direction in enumerate(DIRS):
-				candidate = (min_node[0] + direction[0],min_node[1] + direction[1])
-				if candidate[0] >= 0 and candidate[0] < h and candidate[1] >=0 and candidate[1] < w and candidate not in visited and not reduced_map[candidate[0]][candidate[1]]:
-					if candidate not in visited:
-						todo.add(candidate)
-					distances[candidate[0]][candidate[1]] = min_dist + 1
-					directions[candidate[0]][candidate[1]] = DIRS[(i+2)%4]
-			visited.add(min_node)
+		todo = {}
+		while(not distances.empty()):
+			if not distances.qsize() % (h*w/5):
+				print "{0} nodes visited".format(len(visited))
+			min_dist,min_node = distances.get()
+			if min_node not in visited:
+				for i,direction in enumerate(DIRS):
+					candidate = (min_node[0] + direction[0],min_node[1] + direction[1])
+					if candidate[0] >= 0 and candidate[0] < h and candidate[1] >=0 and candidate[1] < w and candidate not in visited and not reduced_map[candidate[0]][candidate[1]]:
+						if candidate not in todo or min_dist + 1 < todo[candidate]: 
+							distances.put((min_dist + 1,candidate))	
+							todo[candidate] = min_dist + 1
+							directions[candidate[0]][candidate[1]] = DIRS[(i+2)%4]
+				visited.add(min_node)
 		return directions
 
 

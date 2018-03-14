@@ -81,25 +81,20 @@ def get_start_points(image):
     start_x,start_y = imageProcessor.getDefaultStart(image)
     end_x, end_y = imageProcessor.getDefaultEnd(image)
     print("Please \'A\' to use default start and end points, or press \'S\' to choose your own)")
-    for _ in range(5):
-        key = cv2.waitKey(2000)
-        if key == ord('a'):
-            print("Using Default Start and End Points")
-            imageProcessor = ImageProcessor(image)
-            start_x,start_y = imageProcessor.getDefaultStart(image)
-            end_x, end_y = imageProcessor.getDefaultEnd(image)
-            print("Start Point: {0}, End Point: {1}".format((start_x,start_y),(end_x,end_y)))
-            break
-        elif key == ord ('s'):
-            print("Please select a start point")
-            start_x,start_y = get_user_selected_point(image)
-            print ("Start Point: {0}, please select an end point".format((start_x,start_y)))
-            end_x,end_y = get_user_selected_point(image)
-            print("End Pont: {0}".format((end_x,end_y)))
-            break
-        else:
-            print("Invalid")
-            continue
+    key = cv2.waitKey(2000)
+    print key
+    if key == ord('a') or key == -1:
+        print("Using Default Start and End Points")
+        imageProcessor = ImageProcessor(image)
+        start_x,start_y = imageProcessor.getDefaultStart(image)
+        end_x, end_y = imageProcessor.getDefaultEnd(image)
+        print("Start Point: {0}, End Point: {1}".format((start_x,start_y),(end_x,end_y)))
+    elif key == ord ('s'):
+        print("Please select a start point")
+        start_x,start_y = get_user_selected_point(image)
+        print ("Start Point: {0}, please select an end point".format((start_x,start_y)))
+        end_x,end_y = get_user_selected_point(image)
+        print("End Pont: {0}".format((end_x,end_y)))
     cv2.destroyAllWindows()
     return start_x,start_y,end_x,end_y
 
