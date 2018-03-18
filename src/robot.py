@@ -1,4 +1,4 @@
-
+import numpy as np
 class Robot(object):
 
 	def __init__(self,bounds):
@@ -6,18 +6,28 @@ class Robot(object):
 		self.y = random.randint(0,bounds[1]-1)
 		self.directon = random.randint(0,3)
 
-	def __init__(self,position,direction):
+	def __init__(self,position):
 		self.x = position[0]
 		self.y = position[1]
-		self.direction = direction
 
 	def measurePosition(self,map):
-		#TODO: add a function to measure position to nearest wall in each direction
-		pass
+		h,w = map.shape[:2]
+		measurement = np.zeros(4)
+		directions = [[0,-1],[-1,0],[0,1],[1,0]]
+		for i,direction in enmerate(directions):
+			y,x = self.y,self.x
+			distance = 0
+			while y >= 0 and y < h and x >= 0 and x < w and map[y,x] != 0:
+				y += direction[0]
+				x += direction[1]
+				distance += 1
+			measurement[i] = distance
+		return measurements
 
-	def move(self,amount=1):
-		#TODO: add a function to update the robot position
-		pass
+
+	def move(self,direction,amount=1,success_probability = 0.9):
+		if random.random(0,1) < success_probability:
+			self.x += direction[0]
 
 	def probability(self,measurement):
 		#TODO: write a function to guess probability that the measurements were obtained from the robot's position
