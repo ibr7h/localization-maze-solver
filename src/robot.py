@@ -1,6 +1,8 @@
 import numpy as np
 class Robot(object):
 
+	MEASUREMENT_VARIANCE = 0.5
+
 	def __init__(self,bounds):
 		self.x = random.randint(0,bounds[0]-1)
 		self.y = random.randint(0,bounds[1]-1)
@@ -12,7 +14,7 @@ class Robot(object):
 
 	def measurePosition(self,map):
 		h,w = map.shape[:2]
-		measurement = np.zeros(4)
+		measurement = np.random.normal(0,MEASUREMENT_VARIANCE,(4,1))
 		directions = [[0,-1],[-1,0],[0,1],[1,0]]
 		for i,direction in enmerate(directions):
 			y,x = self.y,self.x
@@ -21,7 +23,7 @@ class Robot(object):
 				y += direction[0]
 				x += direction[1]
 				distance += 1
-			measurement[i] = distance
+			measurement[i] += distance
 		return measurements
 
 
